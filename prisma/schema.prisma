@@ -7,19 +7,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model QuranId {
-  id          Int       @id
-  id_sura     Int?
-  id_verse    Int?
-  text_ayah   String?   @db.Text
-  text_indo   String?   @db.Text
-  text_read   String?   @db.Text
-  read_at     DateTime? @db.Timestamp(0)
-  read_by     String?   @db.VarChar(50)
-  complete_at DateTime? @db.Timestamp(0)
+model Surah {
+  id          Int     @id @default(autoincrement())
+  nomor       Int
+  nama        String
+  namaLatin   String
+  jumlahAyat  Int
+  tempatTurun String
+  arti        String
+  deskripsi   String?
 
-  @@index([read_by], map: "idx_read_by")
-  @@index([read_at, complete_at], map: "idx_read_time")
-  @@index([id_sura, id_verse], map: "idx_sura_verse")
-  @@map("quran_id")
+  // Relation: one Surah has many Ayahs
+  ayahs Ayah[]
+
+  @@map("quran_surah")
+}
+
+model Ayah {
+  id            Int    @id @default(autoincrement())
+  nomorAyat     Int
+  teksArab      String @db.Text
+  teksLatin     String @db.Text
+  teksIndonesia String @db.Text
+
+  // Foreign key relation to Surah
+  surahId Int
+  surah   Surah @relation(fields: [surahId], references: [id])
+
+  // Additional fields
+  readAt      DateTime?
+  readBy      String?   @db.VarChar(100)
+  completedAt DateTime?
+
+  @@map("quran_ayah")
 }
