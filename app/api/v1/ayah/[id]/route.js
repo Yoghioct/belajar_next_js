@@ -1,12 +1,12 @@
-// File: /app/api/v2/ayah/[id]/route.js (or pages/api/v2/ayah/[id].js)
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export async function GET(request, { params }) {
-  const { id } = params;
-  const ayahId = parseInt(id);
+  // Await params before accessing its properties
+  const { id } = await params;
+  const ayahId = parseInt(id, 10);
 
   try {
     const ayahDetail = await prisma.Ayah.findUnique({

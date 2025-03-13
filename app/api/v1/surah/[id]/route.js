@@ -1,4 +1,3 @@
-// File: /app/api/v2/ayah/[id]/route.js (or pages/api/v2/ayah/[id].js)
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 

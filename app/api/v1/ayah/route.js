@@ -6,6 +6,11 @@ const prisma = new PrismaClient();
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const statusParam = searchParams.get("status");
+  const pageParam = searchParams.get("page");
+  const pageSizeParam = searchParams.get("pageSize");
+
+  const page = pageParam ? parseInt(pageParam, 10) : 1;
+  const pageSize = pageSizeParam ? parseInt(pageSizeParam, 10) : 20;
 
   let whereClause = {};
   if (statusParam === "completed") {
@@ -23,7 +28,8 @@ export async function GET(request) {
         },
       },
       where: whereClause,
-      take: 10,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       orderBy: { id: "asc" },
     });
 
